@@ -6,7 +6,7 @@ HTML_Element::HTML_Element(std::string name){
 
 std::string HTML_Element::getString(){
     std::string child;
-    if(this->child != 0){
+    if(this->child != NULL){
         child = this->child->getString();
     }
     return ("<" + name + ">" + child + value + "</" + name + ">");
@@ -14,5 +14,6 @@ std::string HTML_Element::getString(){
 }
 
 void HTML_Element::addChild(HTML_Element *child){
-    this->child = child;
+    //this->child = child;
+    list.addElement(child);
 }
