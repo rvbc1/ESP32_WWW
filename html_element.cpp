@@ -14,6 +14,6 @@ std::string HTML_Element::getString(){
 }
 
 void HTML_Element::addChild(HTML_Element *child){
-    //this->child = child;
-    list.addElement(child);
+    this->child = child;
+    //list.addElement(child);
 }

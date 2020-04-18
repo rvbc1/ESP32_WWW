@@ -13,6 +13,7 @@ private:
 public:
     HTML_Element_List();
     void addElement(HTML_Element *element);
+    HTML_Element *getElement(int index);
 };
 
 #endif
