@@ -2,14 +2,16 @@
 #define PAGE_BUILDER_H
 
 #include <string>
-#include "html_element.h"
+#include "html_tag.h"
 
 class Page_Builder{
 public:
     Page_Builder();
     std::string getPageSource();
-    HTML_Element *head;
-    HTML_Element *body;
+    HTML_Tag *docktype;
+    HTML_Tag *html;
+    HTML_Tag *head;
+    HTML_Tag *body;
 };
 
 #endif

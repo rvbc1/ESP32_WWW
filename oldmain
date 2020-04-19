@@ -12,8 +12,8 @@
 WebServer server(80);
 
 //Enter your SSID and PASSWORD
-const char* ssid = "MK";
-const char* password = "123456789";
+const char* ssid = ".........";
+const char* password = ".........";
 
 //===============================================================
 // This routine is executed when you open its IP in browser
@@ -24,8 +24,7 @@ void handleRoot() {
 }
  
 void handleADC() {
- //int a = analogRead(A0);
- int a = millis();
+ int a = analogRead(A0);
  String adcValue = String(a);
  
  server.send(200, "text/plane", adcValue); //Send ADC value only to client ajax request
