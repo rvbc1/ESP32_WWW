@@ -17,14 +17,15 @@ const char MAIN_page[] PROGMEM = R"=====(
 
 <div class="card">
   <h4>The ESP32 Update web page without refresh</h4><br>
-  <h1>Sensor Value:<span id="ADCValue">0</span></h1><br>
-  <br><a href="https://circuits4you.com">Circuits4you.com</a>
+  <h1>Timestamp:<span id="ADCValue">0</span></h1><br>
+  <h1>BT:<span id="BT_DATA">0</span></h1><br>
 </div>
 <script>
 
 setInterval(function() {
   // Call a function repetatively with 2 Second interval
   getData();
+  getBT();
 }, 200); //2000mSeconds update rate
 
 function getData() {
@@ -38,6 +39,19 @@ function getData() {
   xhttp.open("GET", "readADC", true);
   xhttp.send();
 }
+
+function getBT() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("BT_DATA").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "readBT", true);
+  xhttp.send();
+}
+
 </script>
 </body>
 </html>
