@@ -25,7 +25,7 @@ const char MAIN_page[] PROGMEM = R"=====(
 setInterval(function() {
   // Call a function repetatively with 2 Second interval
   getData();
-}, 2000); //2000mSeconds update rate
+}, 200); //2000mSeconds update rate
 
 function getData() {
   var xhttp = new XMLHttpRequest();

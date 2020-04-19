@@ -53,8 +53,11 @@ void setup(void){
   Serial.print(ssid);
 
   //Wait for WiFi to connect
+  uint8_t reconnect_counter = 0;
   while(WiFi.waitForConnectResult() != WL_CONNECTED){      
       Serial.print(".");
+      reconnect_counter++;
+      if(reconnect_counter > 10 ) ESP.restart();
     }
     
   //If connection successful show IP address in serial monitor
