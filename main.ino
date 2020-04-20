@@ -18,6 +18,7 @@
 
 BluetoothSerial SerialBT;
 std::string bt_data;
+String wifi_data = "test";
 
 //==============================================
 
@@ -35,7 +36,7 @@ void handleRoot() {
     server.send(200, "text/html", s);  //Send web page
 }
 
-void handleADC() {
+void handleTime() {
     //int a = analogRead(A0);
     int a = millis();
     String adcValue = String(a);
@@ -49,9 +50,18 @@ void handleBT() {
     server.send(200, "text/plane", bt_data.c_str());  //Send ADC value only to client ajax request
 }
 
+void handleWifi() {
+    //int a = analogRead(A0);
+
+    server.send(200, "text/plane", wifi_data);  //Send ADC value only to client ajax request
+}
 //===============================================================
 // Setup
 //==============================================================
+
+IPAddress local_IP(192, 168, 2, 105);
+IPAddress gateway(192, 168, 2, 9);
+IPAddress subnet(255, 255, 255, 0);
 
 void setup(void) {
     Serial.begin(115200);
@@ -66,7 +76,10 @@ void setup(void) {
   WiFi.softAP(ssid, password);
 */
     //ESP32 connects to your wifi -----------------------------------
-    WiFi.mode(WIFI_STA);  //Connectto your wifi
+    // WiFi.mode(WIFI_STA);  //Connectto your wifi
+    WiFi.mode(WIFI_AP_STA);
+    WiFi.softAP("TEST-DSP", "12345678");
+    WiFi.softAPConfig(local_IP, gateway, subnet);
     WiFi.begin(ssid, password);
 
     Serial.println("Connecting to ");
@@ -89,8 +102,9 @@ void setup(void) {
                                      //----------------------------------------------------------------
 
     server.on("/", handleRoot);        //This is display page
-    server.on("/readADC", handleADC);  //To get update of ADC Value only
+    server.on("/readTime", handleTime);  //To get update of ADC Value only
     server.on("/readBT", handleBT);
+    server.on("/readWifi", handleWifi);
 
     server.begin();  //Start server
     Serial.println("HTTP server started");
@@ -99,6 +113,8 @@ void setup(void) {
 //===============================================================
 // This routine is executed when you open its IP in browser
 //===============================================================
+
+int k = 0;
 void loop(void) {
     server.handleClient();
     if (SerialBT.available()) {
@@ -109,6 +125,32 @@ void loop(void) {
         }
         Serial.print(bt_data.c_str());
     }
-
+    if (k > 10000) {
+        wifi_data = "";
+        int n = WiFi.scanNetworks();
+        Serial.println("scan done");
+        if (n == 0) {
+             wifi_data = "no networks found";
+        } else {
+            wifi_data += n;
+            wifi_data += " networks found";
+            wifi_data += "<br>";
+            for (int i = 0; i < n; ++i) {
+                // Print SSID and RSSI for each network found
+                wifi_data += (i + 1);
+                wifi_data += ": ";
+                wifi_data += WiFi.SSID(i);
+                wifi_data += " (";
+                wifi_data += WiFi.RSSI(i);
+                wifi_data += ")";
+                wifi_data += ((WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? " " : "*");
+                wifi_data += "<br>";
+                //delay(10);
+            }
+        }
+        //Serial.println("");
+        k = 0;
+    }
     delay(1);
+    k++;
 }
